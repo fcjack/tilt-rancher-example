@@ -1,0 +1,29 @@
+{
+    "image": "mcr.microsoft.com/devcontainers/go:1-1.21-bullseye",
+    "features": {
+        // ZSH feature install zsh and oh-my-zsh
+        "ghcr.io/devcontainers-contrib/features/zsh-plugins:0": {
+            "version": "latest"
+        },
+        // Github cli feature install github cli
+        "ghcr.io/devcontainers/features/github-cli:1": {
+            "version": "latest"
+        },
+        // Tilt feature install tilt
+        "ghcr.io/audacioustux/devcontainers/tilt:1": {
+            "version": "latest"
+        },
+        "ghcr.io/devcontainers/features/docker-outside-of-docker:1": {
+            "version": "latest"
+        }
+    },
+    "customizations": {
+        "vscode": {
+            // Default extensions are enabled, feel free to add custom extenstions for your local setup
+            "extensions": [
+                "tilt-dev.Tiltfile"
+            ]
+        }
+    },
+    "remoteUser": "root"
+}
