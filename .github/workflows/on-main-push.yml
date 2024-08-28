@@ -23,4 +23,4 @@ jobs:
     - name: Verify k3s installation
       run: |
         k3s --version
-        kubectl get nodes
+        sudo k3s kubectl get node
