@@ -3,10 +3,7 @@
 # For more on Extensions, see: https://docs.tilt.dev/extensions.html
 load('ext://restart_process', 'docker_build_with_restart')
 
-default_registry(
-    'https://registry.example.com:5000',
-    host_from_cluster='registry.example.com:5000'
-)
+default_registry('registry.local:5000')
 
 local_resource(
     'deploy',
