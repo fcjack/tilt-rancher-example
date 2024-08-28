@@ -28,8 +28,10 @@ runs:
     - name: List available kubectl contexts
       shell: bash
       run: |
+        echo $KUBECONFIG
         echo "Current kubectl context:"
         kubectl config get-contexts
+        kubectl rename-context default k3s-default
 
     - name: Verify k3s installation
       shell: bash
