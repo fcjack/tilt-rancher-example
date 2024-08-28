@@ -38,31 +38,43 @@ runs:
         kubectl version
         kubectl get node
 
-    # - name: Configure k3s registries
-    #   shell: bash
-    #   run: |
-    #     echo '{
-    #       "mirrors": {
-    #         "registry.example.com:5000": {
-    #           "endpoint": ["https://registry.example.com:5000"]
-    #         }
-    #       }
-    #     }' | sudo tee /etc/rancher/k3s/registries.yaml
-    #     sudo systemctl restart k3s
+    - name: Create local registry
+      shell: bash
+      run: |
+        kubectl apply -f - <<EOF
+        apiVersion: v1
+        kind: Pod
+        metadata:
+          name: registry
+          namespace: kube-system
+        spec:
+          containers:
+          - name: registry
+            image: registry:2
+            ports:
+            - containerPort: 5000
+              name: registry
+        EOF
 
-    # - name: Update Docker daemon to use k3s registry
-    #   shell: bash
-    #   run: |
-    #     echo '{
-    #       "insecure-registries" : ["https://registry.example.com:5000"]
-    #     }' | sudo tee /etc/docker/daemon.json
-    #     sudo systemctl restart docker
+    - name: Configure k3s registries
+      shell: bash
+      run: |
+        echo '{
+          "mirrors": {
+            "registry.local:5000": {
+              "endpoint": ["http://registry.local:5000"]
+            }
+          }
+        }' | sudo tee /etc/rancher/k3s/registries.yaml
+        sudo systemctl restart k3s
 
-    # - name: Read registries
-    #   shell: bash
-    #   run: |
-    #     cat /etc/docker/daemon.json
-    #     cat /etc/rancher/k3s/registries.yaml
+    - name: Update Docker daemon to use k3s registry
+      shell: bash
+      run: |
+        echo '{
+          "insecure-registries" : ["registry.local:5000"]
+        }' | sudo tee /etc/docker/daemon.json
+        sudo systemctl restart docker
 
     - name: Install Tilt CLI
       shell: bash
