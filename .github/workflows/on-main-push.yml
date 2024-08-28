@@ -20,8 +20,14 @@ jobs:
     - name: Wait for k3s to start
       run: sleep 15
 
+    - name: Set kubectl context to k3s cluster
+      run: |
+        export KUBECONFIG=/etc/rancher/k3s/k3s.yaml
+
     - name: Verify k3s installation
       run: |
         k3s --version
-        kubectl --version
+        kubectl version
         sudo k3s kubectl get node
+      env:
+        KUBECONFIG: /etc/rancher/k3s/k3s.yaml
