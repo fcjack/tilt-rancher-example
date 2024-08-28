@@ -19,7 +19,7 @@ runs:
 
     - name: Wait for k3s to start
       shell: bash
-      run: sleep 30
+      run: sleep 15
 
     - name: Set kubectl context to k3s cluster
       shell: bash
