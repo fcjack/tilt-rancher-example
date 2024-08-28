@@ -44,6 +44,18 @@ runs:
         curl -fsSL https://raw.githubusercontent.com/tilt-dev/tilt/master/scripts/install.sh | bash
         echo "export PATH=\$PATH:/usr/local/bin" >> $GITHUB_ENV
 
+    - name: Configure k3s to use local registry
+      shell: bash
+      run: |
+        echo '{
+          "mirrors": {
+            "localhost:5000": {
+              "endpoint": ["http://localhost:5000"]
+            }
+          }
+        }' | sudo tee /etc/rancher/k3s/registries.yaml
+        sudo systemctl restart k3s
+
     - name: Update Docker daemon to use k3s registry
       shell: bash
       run: |
