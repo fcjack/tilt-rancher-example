@@ -17,6 +17,9 @@ jobs:
       run: |
         curl -sfL https://get.k3s.io | sh -
 
+    - name: Wait for k3s to start
+      run: sleep 30
+
     - name: Verify k3s installation
       run: |
         k3s --version
