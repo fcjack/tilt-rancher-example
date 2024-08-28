@@ -38,17 +38,17 @@ runs:
         kubectl version
         kubectl get node
 
-    - name: Configure k3s registries
-      shell: bash
-      run: |
-        echo '{
-          "mirrors": {
-            "registry.example.com:5000": {
-              "endpoint": ["https://registry.example.com:5000"]
-            }
-          }
-        }' | sudo tee /etc/rancher/k3s/registries.yaml
-        sudo systemctl restart k3s
+    # - name: Configure k3s registries
+    #   shell: bash
+    #   run: |
+    #     echo '{
+    #       "mirrors": {
+    #         "registry.example.com:5000": {
+    #           "endpoint": ["https://registry.example.com:5000"]
+    #         }
+    #       }
+    #     }' | sudo tee /etc/rancher/k3s/registries.yaml
+    #     sudo systemctl restart k3s
 
     # - name: Update Docker daemon to use k3s registry
     #   shell: bash
