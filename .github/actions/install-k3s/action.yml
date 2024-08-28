@@ -26,7 +26,7 @@ runs:
       env:
         KUBECONFIG: /etc/rancher/k3s/k3s.yaml
       run: |
-        kubectl config rename-context default k3s
+        sudo kubectl config rename-context default k3s
         echo "KUBECONFIG=/etc/rancher/k3s/k3s.yaml" >> $GITHUB_ENV
 
     - name: List available kubectl contexts
