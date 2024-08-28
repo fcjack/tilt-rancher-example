@@ -37,3 +37,14 @@ runs:
         k3s --version
         kubectl version
         kubectl get node
+
+    - name: Install Tilt CLI
+      shell: bash
+      run: |
+        curl -fsSL https://raw.githubusercontent.com/tilt-dev/tilt/master/scripts/install.sh | bash
+        echo "export PATH=\$PATH:/usr/local/bin" >> $GITHUB_ENV
+
+    - name: Verify Tilt installation
+      shell: bash
+      run: |
+        tilt version
