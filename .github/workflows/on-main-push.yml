@@ -17,3 +17,7 @@ jobs:
       uses: ./.github/actions/install-k3s
       with:
         kubernetes-version: 'v1.29.6'
+
+    - name: Run Tilt
+      working-directory: backend
+      run: tilt ci
