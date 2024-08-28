@@ -13,25 +13,7 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v4
 
-    - name: Install k3s
-      run: |
-        export INSTALL_K3S_VERSION="v1.29.6+k3s1" # Specify the desired version here
-        curl -sfL https://get.k3s.io | sh -
-        sudo chmod 644 /etc/rancher/k3s/k3s.yaml
-
-    - name: Wait for k3s to start
-      run: sleep 15
-
-    - name: Set kubectl context to k3s cluster
-      run: |
-        echo "KUBECONFIG=/etc/rancher/k3s/k3s.yaml" >> $GITHUB_ENV
-
-    - name: List available kubectl contexts
-      run: |
-        kubectl config get-contexts
-
-    - name: Verify k3s installation
-      run: |
-        k3s --version
-        kubectl version
-        kubectl get node
+    - name: Install and verify k3s
+      uses: ./.github/actions/install-k3s
+      with:
+        kubernetes-version: 'v1.29.6'
