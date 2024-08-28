@@ -58,11 +58,11 @@ runs:
     #     }' | sudo tee /etc/docker/daemon.json
     #     sudo systemctl restart docker
 
-    - name: Read registries
-      shell: bash
-      run: |
-        cat /etc/docker/daemon.json
-        cat /etc/rancher/k3s/registries.yaml
+    # - name: Read registries
+    #   shell: bash
+    #   run: |
+    #     cat /etc/docker/daemon.json
+    #     cat /etc/rancher/k3s/registries.yaml
 
     - name: Install Tilt CLI
       shell: bash
