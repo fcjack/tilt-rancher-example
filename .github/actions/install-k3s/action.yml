@@ -81,3 +81,4 @@ runs:
       run: |
         curl -fsSL https://raw.githubusercontent.com/tilt-dev/tilt/master/scripts/install.sh | bash
         echo "export PATH=\$PATH:/usr/local/bin" >> $GITHUB_ENV
+        sudo chmod 777 /etc/rancher/k3s/k3s.yaml
