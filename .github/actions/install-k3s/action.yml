@@ -20,7 +20,7 @@ runs:
     shell: bash
     run: |
       k3d registry create registry.local --port 5000
-      k3d cluster create k3d-cluster --registry-use k3d-registry.local:5000
+      k3d cluster create k3d-cluster --registry-use k3d-registry.local:5000 --k3s-arg "--kubelet-arg=--kubelet-version=v1.29.0@server:0"
 
   - name: Set kubectl context to k3d cluster
     shell: bash
@@ -33,6 +33,13 @@ runs:
       k3d --version
       kubectl version
       kubectl get node
+
+  - name: Install Tilt CLI
+    shell: bash
+    run: |
+      curl -fsSL https://raw.githubusercontent.com/tilt-dev/tilt/master/scripts/install.sh | bash
+      echo "export PATH=\$PATH:/usr/local/bin" >> $GITHUB_ENV
+      sudo chmod 777 /etc/rancher/k3s/k3s.yaml
     # - name: Install k3s
     #   shell: bash
     #   run: |
@@ -98,10 +105,3 @@ runs:
     #       "insecure-registries" : ["registry.local:5000"]
     #     }' | sudo tee /etc/docker/daemon.json
     #     sudo systemctl restart docker
-
-    # - name: Install Tilt CLI
-    #   shell: bash
-    #   run: |
-    #     curl -fsSL https://raw.githubusercontent.com/tilt-dev/tilt/master/scripts/install.sh | bash
-    #     echo "export PATH=\$PATH:/usr/local/bin" >> $GITHUB_ENV
-    #     sudo chmod 777 /etc/rancher/k3s/k3s.yaml
