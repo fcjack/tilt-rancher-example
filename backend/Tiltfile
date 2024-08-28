@@ -8,6 +8,8 @@ local_resource(
     'python3 record-start-time.py',
 )
 
+allow_k8s_contexts('k3s')
+
 compile_cmd = 'CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o build/backend ./'
 if os.name == 'nt':
   compile_cmd = 'build.bat'
