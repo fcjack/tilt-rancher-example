@@ -15,7 +15,7 @@ jobs:
 
     - name: Install k3s
       run: |
-        export INSTALL_K3S_VERSION="v1.21.4+k3s1" # Specify the desired version here
+        export INSTALL_K3S_VERSION="v1.29.6+k3s1" # Specify the desired version here
         curl -sfL https://get.k3s.io | sh -
         sudo chmod 644 /etc/rancher/k3s/k3s.yaml
 
