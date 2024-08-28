@@ -1,0 +1,23 @@
+name: Run k3s Server on Main Branch
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  start-k3s:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Install k3s
+      run: |
+        curl -sfL https://get.k3s.io | sh -
+
+    - name: Verify k3s installation
+      run: |
+        k3s --version
+        kubectl get nodes
