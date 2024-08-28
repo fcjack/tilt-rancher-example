@@ -23,6 +23,8 @@ runs:
 
     - name: Set kubectl context to k3s cluster
       shell: bash
+      env:
+        KUBECONFIG: /etc/rancher/k3s/k3s.yaml
       run: |
         kubectl config rename-context default k3s
         echo "KUBECONFIG=/etc/rancher/k3s/k3s.yaml" >> $GITHUB_ENV
