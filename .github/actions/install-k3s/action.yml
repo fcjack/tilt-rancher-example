@@ -50,13 +50,13 @@ runs:
         }' | sudo tee /etc/rancher/k3s/registries.yaml
         sudo systemctl restart k3s
 
-    - name: Update Docker daemon to use k3s registry
-      shell: bash
-      run: |
-        echo '{
-          "insecure-registries" : ["https://registry.example.com:5000"]
-        }' | sudo tee /etc/docker/daemon.json
-        sudo systemctl restart docker
+    # - name: Update Docker daemon to use k3s registry
+    #   shell: bash
+    #   run: |
+    #     echo '{
+    #       "insecure-registries" : ["https://registry.example.com:5000"]
+    #     }' | sudo tee /etc/docker/daemon.json
+    #     sudo systemctl restart docker
 
     - name: Read registries
       shell: bash

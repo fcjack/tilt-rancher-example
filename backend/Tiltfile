@@ -4,8 +4,8 @@
 load('ext://restart_process', 'docker_build_with_restart')
 
 default_registry(
-    'localhost:5000',
-    host_from_cluster='registry:5000'
+    'https://registry.example.com:5000',
+    host_from_cluster='registry.example.com:5000'
 )
 
 local_resource(
