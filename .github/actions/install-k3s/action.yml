@@ -10,75 +10,98 @@ inputs:
 runs:
   using: "composite"
   steps:
-    - name: Install k3s
-      shell: bash
-      run: |
-        export INSTALL_K3S_VERSION="${{ inputs.kubernetes-version }}+k3s1"
-        curl -sfL https://get.k3s.io | sh -
-        sudo chmod 777 /etc/rancher/k3s/k3s.yaml
 
-    - name: Wait for k3s to start
-      shell: bash
-      run: sleep 15
+  - name: Install k3d
+    shell: bash
+    run: |
+      curl -s https://raw.githubusercontent.com/rancher/k3d/main/install.sh | bash
 
-    - name: Set kubectl context to k3s cluster
-      shell: bash
-      run: |
-        echo "KUBECONFIG=/etc/rancher/k3s/k3s.yaml" >> $GITHUB_ENV
+  - name: Create k3d cluster with local registry
+    shell: bash
+    run: |
+      k3d registry create registry.local --port 5000
+      k3d cluster create k3d-cluster --registry-use k3d-registry.local:5000
 
-    - name: List available kubectl contexts
-      shell: bash
-      run: |
-        kubectl config get-contexts
+  - name: Set kubectl context to k3d cluster
+    shell: bash
+    run: |
+      k3d kubeconfig merge k3d-cluster --kubeconfig-switch-context
 
-    - name: Verify k3s installation
-      shell: bash
-      run: |
-        k3s --version
-        kubectl version
-        kubectl get node
+  - name: Verify k3d installation
+    shell: bash
+    run: |
+      k3d --version
+      kubectl version
+      kubectl get node
+    # - name: Install k3s
+    #   shell: bash
+    #   run: |
+    #     export INSTALL_K3S_VERSION="${{ inputs.kubernetes-version }}+k3s1"
+    #     curl -sfL https://get.k3s.io | sh -
+    #     sudo chmod 777 /etc/rancher/k3s/k3s.yaml
 
-    - name: Create local registry
-      shell: bash
-      run: |
-        kubectl apply -f - <<EOF
-        apiVersion: v1
-        kind: Pod
-        metadata:
-          name: registry
-          namespace: kube-system
-        spec:
-          containers:
-          - name: registry
-            image: registry:2
-            ports:
-            - containerPort: 5000
-              name: registry
-        EOF
+    # - name: Wait for k3s to start
+    #   shell: bash
+    #   run: sleep 15
 
-    - name: Configure k3s registries
-      shell: bash
-      run: |
-        echo '{
-          "mirrors": {
-            "registry.local:5000": {
-              "endpoint": ["http://registry.local:5000"]
-            }
-          }
-        }' | sudo tee /etc/rancher/k3s/registries.yaml
-        sudo systemctl restart k3s
+    # - name: Set kubectl context to k3s cluster
+    #   shell: bash
+    #   run: |
+    #     echo "KUBECONFIG=/etc/rancher/k3s/k3s.yaml" >> $GITHUB_ENV
 
-    - name: Update Docker daemon to use k3s registry
-      shell: bash
-      run: |
-        echo '{
-          "insecure-registries" : ["registry.local:5000"]
-        }' | sudo tee /etc/docker/daemon.json
-        sudo systemctl restart docker
+    # - name: List available kubectl contexts
+    #   shell: bash
+    #   run: |
+    #     kubectl config get-contexts
 
-    - name: Install Tilt CLI
-      shell: bash
-      run: |
-        curl -fsSL https://raw.githubusercontent.com/tilt-dev/tilt/master/scripts/install.sh | bash
-        echo "export PATH=\$PATH:/usr/local/bin" >> $GITHUB_ENV
-        sudo chmod 777 /etc/rancher/k3s/k3s.yaml
+    # - name: Verify k3s installation
+    #   shell: bash
+    #   run: |
+    #     k3s --version
+    #     kubectl version
+    #     kubectl get node
+
+    # - name: Create local registry
+    #   shell: bash
+    #   run: |
+    #     kubectl apply -f - <<EOF
+    #     apiVersion: v1
+    #     kind: Pod
+    #     metadata:
+    #       name: registry
+    #       namespace: kube-system
+    #     spec:
+    #       containers:
+    #       - name: registry
+    #         image: registry:2
+    #         ports:
+    #         - containerPort: 5000
+    #           name: registry
+    #     EOF
+
+    # - name: Configure k3s registries
+    #   shell: bash
+    #   run: |
+    #     echo '{
+    #       "mirrors": {
+    #         "registry.local:5000": {
+    #           "endpoint": ["http://registry.local:5000"]
+    #         }
+    #       }
+    #     }' | sudo tee /etc/rancher/k3s/registries.yaml
+    #     sudo systemctl restart k3s
+
+    # - name: Update Docker daemon to use k3s registry
+    #   shell: bash
+    #   run: |
+    #     echo '{
+    #       "insecure-registries" : ["registry.local:5000"]
+    #     }' | sudo tee /etc/docker/daemon.json
+    #     sudo systemctl restart docker
+
+    # - name: Install Tilt CLI
+    #   shell: bash
+    #   run: |
+    #     curl -fsSL https://raw.githubusercontent.com/tilt-dev/tilt/master/scripts/install.sh | bash
+    #     echo "export PATH=\$PATH:/usr/local/bin" >> $GITHUB_ENV
+    #     sudo chmod 777 /etc/rancher/k3s/k3s.yaml

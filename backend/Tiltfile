@@ -3,14 +3,17 @@
 # For more on Extensions, see: https://docs.tilt.dev/extensions.html
 load('ext://restart_process', 'docker_build_with_restart')
 
-default_registry('registry.local:5000')
+default_registry(
+    'k3d-registry.local:5000',
+    host_from_cluster='k3d-registry.local:5000'
+)
 
 local_resource(
     'deploy',
     'python3 record-start-time.py',
 )
 
-allow_k8s_contexts('default')
+allow_k8s_contexts('k3d-cluster')
 
 compile_cmd = 'CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o build/backend ./'
 if os.name == 'nt':
