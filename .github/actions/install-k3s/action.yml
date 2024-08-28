@@ -38,11 +38,17 @@ runs:
         kubectl version
         kubectl get node
 
-    - name: Install Tilt CLI
+    - name: Configure k3s registries
       shell: bash
       run: |
-        curl -fsSL https://raw.githubusercontent.com/tilt-dev/tilt/master/scripts/install.sh | bash
-        echo "export PATH=\$PATH:/usr/local/bin" >> $GITHUB_ENV
+        echo '{
+          "mirrors": {
+            "registry.example.com:5000": {
+              "endpoint": ["https://registry.example.com:5000"]
+            }
+          }
+        }' | sudo tee /etc/rancher/k3s/registries.yaml
+        sudo systemctl restart k3s
 
     - name: Update Docker daemon to use k3s registry
       shell: bash
@@ -57,3 +63,9 @@ runs:
       run: |
         cat /etc/docker/daemon.json
         cat /etc/rancher/k3s/registries.yaml
+
+    - name: Install Tilt CLI
+      shell: bash
+      run: |
+        curl -fsSL https://raw.githubusercontent.com/tilt-dev/tilt/master/scripts/install.sh | bash
+        echo "export PATH=\$PATH:/usr/local/bin" >> $GITHUB_ENV
