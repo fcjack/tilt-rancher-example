@@ -14,8 +14,7 @@ runs:
       shell: bash
       run: |
         export INSTALL_K3S_VERSION="${{ inputs.kubernetes-version }}+k3s1"
-        curl -sfL https://get.k3s.io | sh -
-        sudo chmod 644 /etc/rancher/k3s/k3s.yaml
+        curl -sfL https://get.k3s.io | K3S_KUBECONFIG_MODE="644" INSTALL_K3S_EXEC="server" sh -s - --flannel-backend none
 
     - name: Wait for k3s to start
       shell: bash
@@ -29,8 +28,8 @@ runs:
     - name: List available kubectl contexts
       shell: bash
       run: |
+        echo "Current kubectl context:"
         kubectl config get-contexts
-        kubectl config rename-context default k3s
 
     - name: Verify k3s installation
       shell: bash
